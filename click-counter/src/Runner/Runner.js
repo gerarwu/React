@@ -9,7 +9,8 @@ const Runner = (props) =>{
                 <p>Name : <span>{props.name}</span></p>
                 <p>Number : <span>{props.number} </span></p>
                 <p>Distance : <span>{props.distance} </span> </p>
-                <button>Add Km</button>
+                <button onClick={props.addkm} >Add Km</button>
+                <button onClick={props.changeNumber} >Change number</button>
             </div>);
 }
 
