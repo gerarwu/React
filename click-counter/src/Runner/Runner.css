@@ -1,0 +1,12 @@
+.Runner{
+    background-color: #eee;
+    display: inline-block;
+    width: 250px;   
+    border : 1px solid #bbb;
+    padding: 10px;
+}
+
+span{
+    font-size: .8rem;
+    font-weight: bold; 
+}
