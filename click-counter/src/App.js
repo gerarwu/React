@@ -6,18 +6,43 @@ import Runner from './Runner/Runner';
 class App extends Component {
 
   state = {
-    number : this.generateNumber(),
-    name : 'Gerardo Muñoz',
-    distance : 0
+    runners : [ ]
   }
 
-  addKm = () => {    
-    this.state.distance++;
-    this.setState({distance:this.state.distance});
+  addRunner = () => {
+    let actualRunners = [...this.state.runners];
+    actualRunners.push({
+      number : this.generateNumber(),
+      name : '',
+      distance : 0      
+    });
+    this.setState({runners : actualRunners});    
   }
 
-  refreshNumber = () => {
-    this.setState({number : this.generateNumber()})
+  deleteRunner = (indexRunner)=>{    
+    if(window.confirm('Are you sure?')){
+      let actualRunners = [...this.state.runners];    
+      actualRunners.splice(indexRunner, 1);
+      this.setState({runners : actualRunners});     
+    } 
+  }
+
+  changeName = (event, indexRunner)=>{
+    let actualRunners = [...this.state.runners];    
+    actualRunners[indexRunner].name = event.target.value;
+    this.setState({runners : actualRunners});     
+  }
+
+  addKm = (indexRunner) => {      
+    let actualRunners = [...this.state.runners];    
+    actualRunners[indexRunner].distance++;
+    this.setState({runners : actualRunners});     
+  }
+
+  refreshNumber = (index) => {      
+    let actualRunners = [...this.state.runners];    
+    actualRunners[index].number = this.generateNumber();
+    this.setState({runners : actualRunners}); 
   }
 
   generateNumber(){
@@ -25,8 +50,31 @@ class App extends Component {
   }
 
   render() {
+
+    const styleButton = {
+      margin : '20px 15px',
+      display: 'block'
+    }
+
+    const runners = ( 
+      this.state.runners.map((runner, index)=>{
+        return  <Runner 
+        key={index} 
+        changeNumber={() => this.refreshNumber(index) } 
+        addkm={()=>{this.addKm(index)}} 
+        updateName={(event)=>this.changeName(event, index)}
+        delete = { ()=>this.deleteRunner(index) }
+        number={runner.number} 
+        name={runner.name} 
+        distance={runner.distance} />
+      })
+    );
+
     return (
-      <Runner changeNumber={this.refreshNumber} addkm={this.addKm} number={this.state.number} name={this.state.name} distance={this.state.distance} />
+      <div>
+        <button onClick={this.addRunner} style={styleButton}>Add runner</button>
+        {runners}        
+      </div>
     );
   }
 }
