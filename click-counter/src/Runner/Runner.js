@@ -1,10 +1,10 @@
 
 import React from 'react';
-import './Runner.css';
+import styles from './Runner.css';
 
 const Runner = (props) =>{
 
-    return (<div className='Runner' >
+    return (<div className={styles.Runner} >
                 <p> <input type='text' placeholder='Change the name' value={props.name} onChange={props.updateName}/> </p>
                 <p>Name : <span>{props.name}</span></p>
                 <p>Number : <span>{props.number} </span></p>
