@@ -1,0 +1,22 @@
+.Runner{
+    background-color: #eee;
+    display: inline-block;
+    width: 250px;   
+    border : 1px solid #bbb;
+    padding: 10px;
+    margin : 10px 15px;
+}
+
+.button {
+    display: block;
+    color : #222;
+    background-color: #ddd;
+    border : 0.5px solid #222;
+    border-radius: 2px;
+    margin : 0 5px 10px 5px;
+}
+
+.button:hover{
+    cursor: pointer;
+    background-color: #999;
+}
