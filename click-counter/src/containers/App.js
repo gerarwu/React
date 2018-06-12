@@ -4,7 +4,7 @@ import styles from './App.css';
 import Runner from '../components/Runner/Runner';
 
 class App extends Component {
-
+  
   state = {
     runners : [ ]
   }
@@ -35,8 +35,11 @@ class App extends Component {
 
   addKm = (indexRunner) => {      
     let actualRunners = [...this.state.runners];    
-    actualRunners[indexRunner].distance++;
-    this.setState({runners : actualRunners});     
+    // Example
+    this.setState((prevSatate, props)=>{
+      actualRunners[indexRunner].distance++;
+      return {runners : actualRunners}
+    });     
   }
 
   refreshNumber = (index) => {      
