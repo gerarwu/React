@@ -9,14 +9,15 @@ class FullPost extends Component {
         loadedPost: null
     };
 
-    componentDidUpdate(){
-        if( this.props.id ) {
-            if( !this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== this.props.id) ){
-
-                axios.get("/posts/"+this.props.id).then( response => {                   
+    componentDidMount(){
+        let postId = this.props.match.params.id
+        console.log(postId);
+        if( postId ) {
+            //if( !this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== this.props.id) ){
+                axios.get("/posts/"+postId).then( response => {                   
                     this.setState({loadedPost: response.data});
                 });
-            }            
+            //}            
         }
     }
 
