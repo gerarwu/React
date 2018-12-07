@@ -9,58 +9,96 @@ import Input from '../../../UI/Input/Input';
 class Contactdata extends Component{
 
     state = {
-        name: '',
-        email: '',
-        address: {
-            street: '',
-            postalCode: ''
+        orderForm:{
+            name: this.getInputFormElementConfig('input', 'text', 'Your Name'),
+            email: this.getInputFormElementConfig('input', 'email', 'Your E-mail'),
+            street: this.getInputFormElementConfig('input', 'text', 'Your Street'),
+            zipCode: this.getInputFormElementConfig('input', 'text', 'Your Zip Code'),
+            country: this.getInputFormElementConfig('input', 'text', 'Your Country'),
+            deliveryMethod:{
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: 'fastest', displayValue: 'Fastest'},
+                        { value: 'cheapest', displayValue: 'Cheapest'}
+                    ]
+                },
+                value: ''
+            }
         },
         loading: false
     }
 
+    getInputFormElementConfig(elementType, type, placeholder) {
+        return {
+            elementType: elementType,
+            elementConfig: {
+                type: type,
+                placeholder: placeholder
+            },
+            value: ''
+        }
+    };
+
+    inputChangeHandler = (element , inputIdentifier) => {
+
+        const copyOrderForm = { ...this.state.orderForm };
+
+        const copyElementForm = { ...copyOrderForm[inputIdentifier] };
+        copyElementForm.value = element.target.value;
+
+        copyOrderForm[inputIdentifier] = copyElementForm;
+        this.setState({orderForm: copyOrderForm});
+    }
+
     orderHandler = (e)=>{
         e.preventDefault();
-
         this.setState({loading: true});
+
+        const orderForm = {};
+        for(let e in this.state.orderForm){
+            orderForm[e] = this.state.orderForm[e].value;
+        }
+
         const order = {
             price: this.props.totalPrice,
-            ingredients: this.props.ingredients,
-            deliveryMethod: 'fastest',
-            date: Date.now(),
-            customer: {
-                name: 'Gerardo Muñoz',
-                email: 'gmunoz@mail.com',
-                address: {
-                    country: 'Mexico',
-                    street: 'my street',
-                    zipCode: '00110'
-                }
-            }
+            ingredients: this.props.ingredients,    
+            date: new Date(),
+            orderData: orderForm        
         }
 
         axios.post('/order.json', order).then( response => {            
             //this.setState({loading: false, purchasing: false});
             this.setState({loading: false});
+            this.props.history.push('/');
         }).catch( err => {
             console.log(err);
             //this.setState({loading: false, purchasing: false});
-        })
-        
-
-        console.log(this.props.ingredients);
-        console.log(this.props.totalPrice);
+        });
     }
 
     render(){
 
+        let formElements = [];
+        for(let input in this.state.orderForm){
+            formElements.push({
+                ...this.state.orderForm[input],
+                id: input
+            })
+        }
+        
         let form = (
-            <form autoComplete='off'>
-                <Input type='text' name='name' placeholder='Your Name' />
-                <Input type='email' name='email' placeholder='Your Email' />
-                <Input type='text' name='street' placeholder='Your Street' />
-                <Input type='text' name='postal' placeholder='Your Postal Code' />
-                
-                <Button btnStyle='Success' clicked={this.orderHandler} >ORDER NOW!</Button>
+            <form autoComplete='off' onSubmit={this.orderHandler}>                
+                {formElements.map( formElement => (
+                    <Input 
+                        elementtype={formElement.elementType} 
+                        name={formElement.id} 
+                        key={formElement.id}                         
+                        {...formElement.elementConfig} 
+                        changed={(event) => this.inputChangeHandler(event, formElement.id)}
+                        />
+                ))}                
+                <Button btnStyle='Success' >ORDER NOW!</Button>
             </form>
         );
 
